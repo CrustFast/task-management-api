@@ -1,22 +1,32 @@
+/**
+ * @file Defines the API routes for task-related operations.
+ */
+
 const express = require('express');
 const router = express.Router();
 const taskController = require('../controllers/taskController');
-// Impor validator yang baru kita buat
-const { createTaskValidator, updateTaskValidator } = require('../middlewares/validators');
+const { 
+  createTaskValidator, 
+  updateTaskValidator 
+} = require('../middlewares/validators');
 
-// POST /tasks: Terapkan middleware validasi sebelum controller
+// --- Task Routes ---
+
+// POST /tasks: Create a new task.
+// The request body is first validated by createTaskValidator.
 router.post('/', createTaskValidator, taskController.createTask);
 
-// GET /tasks: Mengambil semua tugas
+// GET /tasks: Retrieve all tasks, with optional filtering and sorting.
 router.get('/', taskController.getAllTasks);
 
-// GET /tasks/:id: Mengambil satu task spesifik
+// GET /tasks/:id: Retrieve a single task by its ID.
 router.get('/:id', taskController.getTaskById);
 
-// PUT /tasks/:id: Terapkan middleware validasi sebelum controller
+// PUT /tasks/:id: Update an existing task.
+// The request body is first validated by updateTaskValidator.
 router.put('/:id', updateTaskValidator, taskController.updateTask);
 
-// DELETE /tasks/:id: Menghapus tugas
+// DELETE /tasks/:id: Delete a task by its ID.
 router.delete('/:id', taskController.deleteTask);
 
 module.exports = router;

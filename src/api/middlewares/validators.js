@@ -1,38 +1,48 @@
+/**
+ * @file Contains all validation middleware for incoming requests.
+ */
+
 const { body, validationResult } = require('express-validator');
 
-// Middleware untuk menangani error validasi
+/**
+ * A middleware that checks for validation errors and sends a 400 response if any exist.
+ * @param {object} req - The Express request object.
+ * @param {object} res - The Express response object.
+ * @param {function} next - The next middleware function.
+ */
 const handleValidationErrors = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Jika ada error, kirim respons 400 dengan detail error
     return res.status(400).json({ errors: errors.array() });
   }
-  next(); // Jika tidak ada error, lanjutkan ke controller
+  next();
 };
 
-// Aturan validasi untuk membuat task baru
+/**
+ * Validation rules for creating a new task.
+ * All fields are required.
+ */
 const createTaskValidator = [
-  // title tidak boleh kosong
   body('title')
     .notEmpty()
     .withMessage('Title is required and cannot be empty'),
 
-  // priority harus salah satu dari nilai yang diizinkan
   body('priority')
     .isIn(['Low', 'Medium', 'High'])
     .withMessage('Priority must be one of: Low, Medium, High'),
 
-  // deadline harus dalam format tanggal ISO8601 (YYYY-MM-DDTHH:mm:ss.sssZ)
   body('deadline')
     .isISO8601()
     .toDate()
     .withMessage('Deadline must be a valid ISO 8601 date'),
 
-  // Setelah semua aturan dijalankan, panggil handler untuk memeriksa hasilnya
   handleValidationErrors,
 ];
 
-// Aturan validasi untuk memperbarui task (semua field opsional)
+/**
+ * Validation rules for updating an existing task.
+ * All fields are optional, but if provided, they must be valid.
+ */
 const updateTaskValidator = [
   body('title')
     .optional()

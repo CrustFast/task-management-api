@@ -1,14 +1,17 @@
-// Mengimpor PrismaClient dari paket @prisma/client
+/**
+ * @file A utility script for manually testing the database connection and creating a sample task.
+ * This script is for development purposes only and is not part of the main application.
+ */
+
 const { PrismaClient } = require('@prisma/client');
-// Membuat instance baru dari PrismaClient
 const prisma = new PrismaClient();
 
-// Fungsi utama async untuk menjalankan operasi database
+/**
+ * The main function to run the database test.
+ */
 async function main() {
-  // Menampilkan log bahwa proses pembuatan task dimulai
   console.log('Attempting to create a new task...');
   
-  // Membuat task baru di database menggunakan prisma.task.create
   const newTask = await prisma.task.create({
     data: {
       title: 'Complete Backend API',
@@ -19,22 +22,19 @@ async function main() {
     },
   });
   
-  // Menampilkan task yang baru saja dibuat
   console.log('New task created successfully:', newTask);
 
-  // Mengambil semua task dari database
   const allTasks = await prisma.task.findMany();
-  // Menampilkan semua task yang ada
   console.log('All tasks:', allTasks);
 }
 
-// Memanggil fungsi main
+// Execute the main function and handle potential errors.
 main()
   .catch((e) => {
-    // Menangkap dan melempar error jika terjadi
-    throw e;
+    console.error('An error occurred:', e);
+    process.exit(1);
   })
   .finally(async () => {
-    // Memastikan koneksi ke database ditutup setelah selesai
+    // Ensure the database connection is closed when the script finishes.
     await prisma.$disconnect();
   });

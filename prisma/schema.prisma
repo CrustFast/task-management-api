@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,22 +10,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Enum untuk mengontrol nilai priority
+// Defines the allowed values for a task's priority level.
 enum Priority {
   Low
   Medium
   High
 }
 
-// Model untuk tabel Task
+// Defines the schema for the "Task" table in the database.
 model Task {
   id          Int      @id @default(autoincrement())
   title       String
-  description String? // Tanda '?' berarti opsional
+  description String?  // The '?' makes this field optional (nullable).
   category    String
-  priority    Priority @default(Medium) // Menggunakan Enum Priority
+  priority    Priority @default(Medium) // Uses the Priority enum.
   deadline    DateTime
 
+  // These fields are managed automatically by Prisma.
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
